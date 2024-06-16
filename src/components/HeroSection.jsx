@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 
 const HeroSection = () => {
   const [backgroundImage, setBackgroundImage] = useState(
-    "https://i.pinimg.com/564x/4a/e1/5d/4ae15d4e54c11c3a1ed83c69ed874978.jpg"
+    "https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   );
 
   useEffect(() => {
     const images = [
-      "https://i.pinimg.com/564x/85/5d/a7/855da75316bc5435ed9e09d0625f347f.jpg",
-      "https://i.pinimg.com/564x/48/44/46/4844463f0663335a5431f1161e22fcf5.jpg",
-      "https://i.pinimg.com/564x/70/15/67/701567afbd752b56bd591797e7981435.jpg",
+      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1494783367193-149034c05e8f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1482015527294-7c8203fc9828?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ];
     let index = 0;
     const interval = setInterval(() => {
@@ -21,13 +21,13 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <Box position={"relative"} textAlign={"center"} color={"white"}>
+    <Box position={"relative"} textAlign={"center"} color={"white"} >
       <Image
         src={backgroundImage}
         alt="Travel Img"
         objectFit={"cover"}
         width={"100%"}
-        height={"65vh"}
+        height={"75vh"}
         filter={"brightness(50%)"}
       />
       <Box

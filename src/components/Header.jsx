@@ -8,7 +8,7 @@ const Header = () => {
       <Flex
         h={16}
         alignItems={"center"}
-        justifyContent={"center"}
+        justifyContent={"space-between"}
         maxW={"1200px"}
         mx={"auto"}
         px={4}
