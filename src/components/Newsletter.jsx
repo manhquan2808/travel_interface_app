@@ -30,7 +30,7 @@ const Newletter = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <Button size={"lg"} colorScheme="teal" onClick={handleSubcribed}>
-          {subscribed ? 'Subcribed!' : 'Subcribe'}
+          {subscribed ? 'Đã đăng ký!' : 'Đăng ký'}
         </Button>
       </Stack>
     </Box>

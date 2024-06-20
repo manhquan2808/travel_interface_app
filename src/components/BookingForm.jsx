@@ -1,83 +1,179 @@
+import { AddIcon, CalendarIcon, MinusIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   FormControl,
   FormLabel,
+  Grid,
+  GridItem,
   Heading,
+  IconButton,
   Input,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuGroup,
+  MenuItem,
+  MenuList,
   Select,
-  Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { addDays, format } from "date-fns";
+import { useEffect, useState } from "react";
 
-const BookingForm = ({onSearch}) => {
+const IncrementDecrementControl = ({ label, value, onIncrement, onDecrement, min = 0 }) => {
+  return (
+    <MenuGroup title={label}>
+      <MenuItem display="flex" justifyContent="space-between" alignItems="center">
+        <IconButton
+          aria-label={`Decrease ${label}`}
+          icon={<MinusIcon />}
+          onClick={onDecrement}
+          isDisabled={value <= min}
+        />
+        <Box mx={2}>{value}</Box>
+        <IconButton
+          aria-label={`Increase ${label}`}
+          icon={<AddIcon />}
+          onClick={onIncrement}
+        />
+      </MenuItem>
+    </MenuGroup>
+  );
+};
+
+const BookingForm = ({ onSearch }) => {
   const [location, setLocation] = useState("");
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
-  const [guests, setGuests] = useState("");
+  const [numOfNights, setNumOfNights] = useState(1);
+  const [adults, setAdults] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [rooms, setRooms] = useState(1);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    if (checkInDate) {
+      const checkOut = addDays(new Date(checkInDate), numOfNights);
+      setCheckOutDate(format(checkOut, "yyyy-MM-dd"));
+    }
+  }, [checkInDate, numOfNights]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
-      location,
-      checkInDate,
-      checkOutDate,
-      guests,
-    });
     onSearch({
       location,
       checkInDate,
       checkOutDate,
-      guests,
+      adults,
+      children,
+      rooms,
     });
   };
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return format(today, "yyyy-MM-dd");
+  };
+
+  const minDate = getCurrentDate();
+
   return (
     <Box p={4} bg={"grey.100"} borderRadius={"md"} boxShadow={"md"}>
       <Heading as={"h2"} size={"lg"} mb={4}>
         Đặt phòng
       </Heading>
       <form onSubmit={handleSubmit}>
-        <Stack spacing={4} justifyContent={"center"}>
-          <FormControl id="location" isRequired>
-            <FormLabel>Vị trí</FormLabel>
-            <Input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="checkInDate" isRequired>
-            <FormLabel>Ngày nhận phòng</FormLabel>
-            <Input
-              type="date"
-              value={checkInDate}
-              onChange={(e) => setCheckInDate(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="checkOutDate" isRequired>
-            <FormLabel>Ngày trả phòng</FormLabel>
-            <Input
-              type="date"
-              value={checkOutDate}
-              onChange={(e) => setCheckOutDate(e.target.value)}
-            />
-          </FormControl>
-          <FormControl id="guest" isRequired>
-            <FormLabel>Số người</FormLabel>
-            <Select
-              value={guests}
-              onChange={(e) => setGuests(e.target.value)}
-            >
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-                <option value={6}>6</option>
-            </Select>
-          </FormControl>
-          <Button colorScheme="teal" type="submit">Tìm kiếm</Button>
-        </Stack>
+        <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
+          <GridItem colSpan={3}>
+            <FormControl id="location" isRequired>
+              <FormLabel>Nhập điểm đến</FormLabel>
+              <Input
+                type="text"
+                autoComplete="off"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl id="checkInDate" isRequired>
+              <FormLabel>Ngày nhận phòng</FormLabel>
+              <Input
+                min={minDate}
+                type="date"
+                value={checkInDate}
+                onChange={(e) => setCheckInDate(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl id="numOfNights" isRequired>
+              <FormLabel>Số đêm</FormLabel>
+              <Select
+                value={numOfNights}
+                onChange={(e) => setNumOfNights(parseInt(e.target.value))}
+              >
+                {Array.from({ length: 30 }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    {n} đêm
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl id="checkOutDate">
+              <FormLabel>Ngày trả phòng</FormLabel>
+              <Input
+                type="date"
+                disabled
+                value={checkOutDate}
+                onChange={(e) => setCheckOutDate(e.target.value)}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem colSpan={1}>
+            <Menu isOpen={isOpen} onClose={onClose}>
+              <MenuButton
+                as={Button}
+                rightIcon={<CalendarIcon />}
+                onClick={onOpen}
+              >
+                {`${adults} người lớn, ${children} trẻ em, ${rooms} phòng`}
+              </MenuButton>
+              <MenuList>
+                <IncrementDecrementControl
+                  label="Người lớn"
+                  value={adults}
+                  onIncrement={() => setAdults(adults + 1)}
+                  onDecrement={() => setAdults(adults - 1)}
+                  min={1}
+                />
+                <MenuDivider />
+                <IncrementDecrementControl
+                  label="Trẻ em"
+                  value={children}
+                  onIncrement={() => setChildren(children + 1)}
+                  onDecrement={() => setChildren(children - 1)}
+                />
+                <MenuDivider />
+                <IncrementDecrementControl
+                  label="Phòng"
+                  value={rooms}
+                  onIncrement={() => setRooms(rooms + 1)}
+                  onDecrement={() => setRooms(rooms - 1)}
+                  min={1}
+                />
+              </MenuList>
+            </Menu>
+          </GridItem>
+          <GridItem colSpan={2} alignItems={"center"}>
+            <Button colorScheme="teal" type="submit">
+              Tìm kiếm
+            </Button>
+          </GridItem>
+        </Grid>
       </form>
     </Box>
   );

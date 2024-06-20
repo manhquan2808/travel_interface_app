@@ -1,11 +1,20 @@
-import { Heading, SimpleGrid, Skeleton, Text, Box, Image } from "@chakra-ui/react";
+import {
+  Heading,
+  SimpleGrid,
+  Skeleton,
+  Text,
+  Box,
+  Image,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
-const BoonkingResults = ({ searchParams }) => {
+const BookingResults = ({ searchParams }) => {
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!searchParams) return;
+
     const fetchResult = async () => {
       setLoading(true);
 
@@ -16,34 +25,44 @@ const BoonkingResults = ({ searchParams }) => {
           id: 1,
           name: "Luxury Hotel",
           location: searchParams.location,
-          imageSrc: "/public/images/1.jpg",
+          imageSrc: "/images/1.jpg",
           price: "2.000.000/đêm",
+          checkInDate: searchParams.checkInDate,
+          checkOutDate: searchParams.checkOutDate,
+          guests: searchParams.adults + searchParams.children,
+          rooms: searchParams.rooms,
         },
         {
           id: 2,
           name: "Budget Hotel",
           location: searchParams.location,
-          imageSrc: "/public/images/2.jpg",
+          imageSrc: "/images/2.jpg",
           price: "500.000/đêm",
+          checkInDate: searchParams.checkInDate,
+          checkOutDate: searchParams.checkOutDate,
+          guests: searchParams.adults + searchParams.children,
+          rooms: searchParams.rooms,
         },
         {
           id: 3,
           name: "Mid-range Hotel",
           location: searchParams.location,
-          imageSrc: "/public/images/3.jpg",
+          imageSrc: "/images/3.jpg",
           price: "1.000.000/đêm",
+          checkInDate: searchParams.checkInDate,
+          checkOutDate: searchParams.checkOutDate,
+          guests: searchParams.adults + searchParams.children,
+          rooms: searchParams.rooms,
         },
       ];
       setResults(data);
       setLoading(false);
     };
-    if (searchParams) {
-      fetchResult();
-    }
+    fetchResult();
   }, [searchParams]);
 
   return (
-    <Box p={5}> 
+    <Box p={5}>
       <Heading as={"h2"} size={"xl"} textAlign={"center"} mb={10}>
         Kết Quả Tìm Kiếm
       </Heading>
@@ -73,6 +92,10 @@ const BoonkingResults = ({ searchParams }) => {
                 {result.name}
               </Heading>
               <Text mb={2}>{result.location}</Text>
+              <Text mb={2}>Nhận phòng: {result.checkInDate}</Text>
+              <Text mb={2}>Trả phòng: {result.checkOutDate}</Text>
+              <Text mb={2}>Số người: {result.guests}</Text>
+              <Text mb={2}>Số phòng: {result.rooms}</Text>
               <Text fontWeight="bold">{result.price}</Text>
             </Box>
           ))}
@@ -82,4 +105,4 @@ const BoonkingResults = ({ searchParams }) => {
   );
 };
 
-export default BoonkingResults;
+export default BookingResults;

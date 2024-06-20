@@ -3,31 +3,27 @@ import "./App.css";
 import { Box } from "@chakra-ui/react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import HeroSection from "./components/HeroSection"
-import Features from './components/Feature'
-import Testimonials from './components/Testimonials'
-import Newletter from "./components/Newsletter";
-import BookingForm from "./components/BookingForm"
-import BookingResults from "./components/BookingResults"
+import Home from "./pages/Home";
+import { Route, Routes } from "react-router-dom";
+import Services from "./pages/Services";
+import Contact from "./pages/Contact";
+import Booking from "./pages/Booking";
 
 function App() {
-  const [searchParams, setSearchParams] = useState(null)
+  const [searchParams, setSearchParams] = useState(null);
 
   const handleSearch = (params) => {
-    setSearchParams(params)
-  }
+    setSearchParams(params);
+  };
   return (
     <Box>
-      <Header />
-      <HeroSection/>
-      {/* <BookingForm/> */}
-      <Box p={5} maxW={'1200px'} mx={'auto'}>
-        <BookingForm onSearch={handleSearch}/>
-        {searchParams && <BookingResults searchParams={searchParams}/>}
-      </Box>
-      <Features/>
-      <Testimonials/>
-      <Newletter/>
+      <Header/>
+      <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/booking" element={<Booking/>}/>
+        <Route path="/services" element={<Services/>}/>
+        <Route path="/contact" element={<Contact/>}/>
+      </Routes>
       <Footer/>
     </Box>
   );

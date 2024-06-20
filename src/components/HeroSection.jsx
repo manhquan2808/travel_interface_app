@@ -1,5 +1,6 @@
 import { Box, Image, Heading, Text, Button } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   const [backgroundImage, setBackgroundImage] = useState(
@@ -29,6 +30,7 @@ const HeroSection = () => {
         width={"100%"}
         height={"75vh"}
         filter={"brightness(50%)"}
+        borderRadius={15}
       />
       <Box
         position={"absolute"}
@@ -42,7 +44,7 @@ const HeroSection = () => {
         <Text fontSize={"lg"} mb={8}>
           Đặt kỳ nghỉ mơ ước của bạn ngay hôm nay!
         </Text>
-        <Button size={"lg"} colorScheme="teal">
+        <Button as={Link} to={'/booking'} size={"lg"} colorScheme="teal">
           Bắt Đầu
         </Button>
       </Box>

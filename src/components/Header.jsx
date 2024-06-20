@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Flex, Link, HStack, Image } from "@chakra-ui/react";
-import { color } from "framer-motion";
+import { Link as RouterLink } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -13,11 +13,17 @@ const Header = () => {
         mx={"auto"}
         px={4}
       >
-        <Image src="https://mixivivu.com/_next/image?url=%2Fblack-logo.png&w=384&q=75" alt="Logo" boxSize="50px" width={"-moz-fit-content"} />
+        <Image
+          src="https://mixivivu.com/_next/image?url=%2Fblack-logo.png&w=384&q=75"
+          alt="Logo"
+          boxSize="50px"
+          width={"-moz-fit-content"}
+        />
 
         <HStack as={"nav"} spacing={4}>
           <Link
-            href="#home"
+            as={RouterLink}
+            to={"/"}
             px={2}
             py={1}
             rounded={"md"}
@@ -26,25 +32,28 @@ const Header = () => {
             Trang chủ
           </Link>
           <Link
-            href="#destination"
+            as={RouterLink}
+            to={"/booking"}
             px={2}
             py={1}
             rounded={"md"}
             _hover={{ textDecoration: "none", bg: "gray.700" }}
           >
-            Điểm đến
+            Tìm kiếm
           </Link>
           <Link
-            href="#about"
+            as={RouterLink}
+            to={"/services"}
             px={2}
             py={1}
             rounded={"md"}
             _hover={{ textDecoration: "none", bg: "gray.700" }}
           >
-            Thông tin{" "}
+            Dịch vụ
           </Link>
           <Link
-            href="#contact"
+            as={RouterLink}
+            to={"/contact"}
             px={2}
             py={1}
             rounded={"md"}
