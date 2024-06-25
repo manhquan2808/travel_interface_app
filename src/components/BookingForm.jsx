@@ -19,12 +19,22 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { addDays, format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const IncrementDecrementControl = ({ label, value, onIncrement, onDecrement, min = 0 }) => {
+const IncrementDecrementControl = ({
+  label,
+  value,
+  onIncrement,
+  onDecrement,
+  min = 0,
+}) => {
   return (
     <MenuGroup title={label}>
-      <MenuItem display="flex" justifyContent="space-between" alignItems="center">
+      <MenuItem
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
         <IconButton
           aria-label={`Decrease ${label}`}
           icon={<MinusIcon />}
@@ -51,6 +61,8 @@ const BookingForm = ({ onSearch }) => {
   const [children, setChildren] = useState(0);
   const [rooms, setRooms] = useState(1);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const menuRef = useRef(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (checkInDate) {
@@ -78,8 +90,32 @@ const BookingForm = ({ onSearch }) => {
 
   const minDate = getCurrentDate();
 
+  const handleMenuOpen = () => {
+    onOpen();
+    setIsMenuOpen(true);
+  };
+
+  const handleMenuClose = () => {
+    onClose();
+    setIsMenuOpen(false);
+  };
+
+  const handleOutsideClick = (e) => {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
-    <Box p={4} bg={"grey.100"} borderRadius={"md"} boxShadow={"md"}>
+    <Box p={4} bg={"grey.700"} borderRadius={"md"} boxShadow={"md"}>
       <Heading as={"h2"} size={"lg"} mb={4}>
         Đặt phòng
       </Heading>
@@ -133,12 +169,12 @@ const BookingForm = ({ onSearch }) => {
               />
             </FormControl>
           </GridItem>
-          <GridItem colSpan={1}>
-            <Menu isOpen={isOpen} onClose={onClose}>
+          <GridItem colSpan={1} ref={menuRef}>
+            <Menu isOpen={isMenuOpen}>
               <MenuButton
                 as={Button}
                 rightIcon={<CalendarIcon />}
-                onClick={onOpen}
+                onClick={handleMenuOpen}
               >
                 {`${adults} người lớn, ${children} trẻ em, ${rooms} phòng`}
               </MenuButton>
@@ -165,6 +201,7 @@ const BookingForm = ({ onSearch }) => {
                   onDecrement={() => setRooms(rooms - 1)}
                   min={1}
                 />
+                <Button onClick={handleMenuClose}>Đóng</Button>
               </MenuList>
             </Menu>
           </GridItem>
